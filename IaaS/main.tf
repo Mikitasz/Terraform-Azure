@@ -14,6 +14,5 @@ provider "azurerm" {
 
 module "Resource_group" {
   source = "../modules/Resource_Group/"
-  name 
 }
 
