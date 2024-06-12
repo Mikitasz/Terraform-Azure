@@ -20,5 +20,11 @@ module "network" {
   source   = "../modules/network/"
   location = module.Resource_group.resource_group_location
   name     = module.Resource_Group.resource_group_name
+  sg_id    = mo
 }
 
+module "security_group" {
+  source      = "../modules/security_group/"
+  rg_name     = module.Resource_group.resource_group_name
+  rg_location = module.Resource_group.resource_group_location
+}
