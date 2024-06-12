@@ -16,3 +16,8 @@ module "Resource_group" {
   source = "../modules/Resource_Group/"
 }
 
+module "network" {
+ source = "../modules/network/"
+ location = module.
+}
+
