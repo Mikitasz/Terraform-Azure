@@ -15,4 +15,16 @@ resource "azurerm_network_security_group" "iaas_sg" {
     destination_address_prefix = "*"
 
   }
+  security_rule {
+    name                         = "HTTP"
+    description                  = "ALLOW_HTTP"
+    protocol                     = "Tcp"
+    access                       = "Allow"
+    direction                    = "Inbound"
+    priority                     = "200"
+    source_port_range            = "*"
+    destination_port_range       = "80"
+    source_address_prefix        = "*"
+    destination_address_prefixes = "*"
+  }
 }

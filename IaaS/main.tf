@@ -19,12 +19,20 @@ module "Resource_group" {
 module "network" {
   source   = "../modules/network/"
   location = module.Resource_group.resource_group_location
-  name     = module.Resource_Group.resource_group_name
-  sg_id    = mo
+  name     = module.Resource_group.resource_group_name
+  sg_id    = module.security_group.sg_id
 }
 
 module "security_group" {
   source      = "../modules/security_group/"
   rg_name     = module.Resource_group.resource_group_name
   rg_location = module.Resource_group.resource_group_location
+
+}
+module "vm" {
+
+  source      = "../modules/vm/"
+  rg_location = module.Resource_group.resource_group_location
+  nic_id      = module.network.nic_id
+  rg_name     = module.Resource_group.resource_group_name
 }

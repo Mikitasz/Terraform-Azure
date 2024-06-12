@@ -1,5 +1,5 @@
 variable "name" {
-  default = "Resource_group"
+  default = "IaaS_resource_group"
 
 }
 
