@@ -1,1 +1,6 @@
-va
+variable "location" {
+
+}
+variable "name" {
+
+}
