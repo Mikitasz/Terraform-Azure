@@ -1,4 +1,5 @@
 *.terraform*
 *terraform.*
 IaaS/terraform*
+*.backup
 *.state*
