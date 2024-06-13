@@ -33,6 +33,7 @@ resource "azurerm_linux_virtual_machine" "iaas_vm" {
     username   = "mikita"
     public_key = tls_private_key.ssh_key_iaas.public_key_openssh
   }
+
 }
 resource "azurerm_virtual_machine_extension" "my_vm_extension" {
   count                = 2
@@ -40,7 +41,7 @@ resource "azurerm_virtual_machine_extension" "my_vm_extension" {
   virtual_machine_id   = azurerm_linux_virtual_machine.iaas_vm[count.index].id
   publisher            = "Microsoft.Azure.Extensions"
   type                 = "CustomScript"
-  type_handler_version = "2.0"
+  type_handler_version = "2.1"
 
   settings = <<SETTINGS
  {
@@ -50,6 +51,8 @@ SETTINGS
 
 }
 resource "local_file" "key" {
-  filename = "../private-key-iaas"
-  content  = tls_private_key.ssh_key_iaas.private_key_openssh
+  filename        = "../private-key-iaas"
+  file_permission = "0500"
+  content         = tls_private_key.ssh_key_iaas.private_key_openssh
 }
+
