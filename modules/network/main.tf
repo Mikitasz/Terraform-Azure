@@ -14,26 +14,29 @@ resource "azurerm_subnet" "IaaS_subnet" {
 }
 
 resource "azurerm_public_ip" "IaaS_public_ip" {
-  name                = "IaaS_public_ip"
+  count               = 3
+  name                = "IaaS_public_ip.${count.index}"
   location            = var.location
   resource_group_name = var.name
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
+  sku                 = "Standard"
 
 }
 
 resource "azurerm_network_interface" "nic" {
-  name                = "IaaS_nic"
+  count               = 2
+  name                = "IaaS_nic_${count.index}"
   location            = var.location
   resource_group_name = var.name
   ip_configuration {
-    name                          = "internal"
+    name                          = "ip-config-${count.index}"
     subnet_id                     = azurerm_subnet.IaaS_subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.IaaS_public_ip.id
+    public_ip_address_id          = azurerm_public_ip.IaaS_public_ip[count.index].id
   }
 
 }
-resource "azurerm_network_interface_security_group_association" "iaas_sg_as" {
-  network_interface_id      = azurerm_network_interface.nic.id
+resource "azurerm_subnet_network_security_group_association" "iaas_sg_as" {
+  subnet_id                 = azurerm_subnet.IaaS_subnet.id
   network_security_group_id = var.sg_id
 }

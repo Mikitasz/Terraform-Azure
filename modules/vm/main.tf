@@ -5,14 +5,15 @@ resource "tls_private_key" "ssh_key_iaas" {
 }
 
 resource "azurerm_linux_virtual_machine" "iaas_vm" {
-  name                  = "iaas_vm"
+  count                 = 2
+  name                  = "iaas_vm-${count.index}"
   location              = var.rg_location
   resource_group_name   = var.rg_name
-  network_interface_ids = [var.nic_id]
+  network_interface_ids = [var.nic_id[count.index]]
   size                  = "Standard_DS1_v2"
 
   os_disk {
-    name                 = "iaas_disk"
+    name                 = "iaas_disk-${count.index}"
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
   }
@@ -24,7 +25,7 @@ resource "azurerm_linux_virtual_machine" "iaas_vm" {
     version   = "latest"
   }
 
-  computer_name                   = "iaasVM"
+  computer_name                   = "iaasVM-${count.index}"
   admin_username                  = "mikita"
   disable_password_authentication = true
 
@@ -33,7 +34,22 @@ resource "azurerm_linux_virtual_machine" "iaas_vm" {
     public_key = tls_private_key.ssh_key_iaas.public_key_openssh
   }
 }
+resource "azurerm_virtual_machine_extension" "my_vm_extension" {
+  count                = 2
+  name                 = "docker"
+  virtual_machine_id   = azurerm_linux_virtual_machine.iaas_vm[count.index].id
+  publisher            = "Microsoft.Azure.Extensions"
+  type                 = "CustomScript"
+  type_handler_version = "2.0"
+
+  settings = <<SETTINGS
+ {
+"commandToExecute": "sudo apt-get update && sudo apt-get install nginx -y && echo \"Hello World from $(hostname)\" > /var/www/html/index.html && sudo systemctl restart nginx"
+ }
+SETTINGS
+
+}
 resource "local_file" "key" {
-  filename = "../../private-key-iaas"
+  filename = "../private-key-iaas"
   content  = tls_private_key.ssh_key_iaas.private_key_openssh
 }

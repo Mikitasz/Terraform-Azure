@@ -3,6 +3,9 @@ variable "name" {
 
 }
 
+variable "type_iac" {
+  default = "IaaS"
+}
 variable "location" {
   default = "West Europe"
 }

@@ -36,3 +36,11 @@ module "vm" {
   nic_id      = module.network.nic_id
   rg_name     = module.Resource_group.resource_group_name
 }
+module "load_balancer" {
+  source            = "../modules/load_balancer/"
+  public_ip_address = module.network.public_ip_address
+  rg_location       = module.Resource_group.resource_group_location
+  rg_name           = module.Resource_group.resource_group_name
+  subnet_id         = module.network.subnet_id
+  nic_id            = module.network.nic_id
+}

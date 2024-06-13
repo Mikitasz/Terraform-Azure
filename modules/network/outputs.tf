@@ -4,6 +4,12 @@ output "network_name" {
 }
 
 output "nic_id" {
-  value = azurerm_network_interface.nic.id
+  value = [for nic in azurerm_network_interface.nic : nic.id]
 
+}
+output "subnet_id" {
+  value = azurerm_subnet.IaaS_subnet.id
+}
+output "public_ip_address" {
+  value = [for ip in azurerm_public_ip.IaaS_public_ip : ip.id]
 }
