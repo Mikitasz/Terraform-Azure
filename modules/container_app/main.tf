@@ -12,9 +12,14 @@ resource "azurerm_container_group" "container" {
     memory = 0.5
 
     ports {
-      port     = 80
+      port     = 8080
       protocol = "TCP"
     }
+
+  }
+  image_registry_credential {
+    username = "mikitasz"
+    server   = "ghcr.io"
   }
 }
 output "container_ipv4_address" {
